@@ -225,7 +225,7 @@ fileprivate extension TurboImageView {
     lazyImageView.makeImageView = { container in
       guard let data = container.data else { return nil }
       let view = APNGImageView(frame: .zero)
-      let image = try? APNGImage(data: data, decodingOptions: .fullFirstPass)
+      let image = try? APNGImage(data: data, decodingOptions: .cacheDecodedImages)
       view.image = image
       return view
     }
