@@ -1,12 +1,18 @@
 package com.turboimage
 
 import android.os.Build.VERSION.SDK_INT
+import android.util.Log
+import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.ImageView.ScaleType
+import androidx.core.view.isVisible
+import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
 import coil.dispose
 import coil.drawable.CrossfadeDrawable
+import coil.imageLoader
 import coil.load
 import coil.request.CachePolicy
 import coil.size.Dimension
@@ -16,6 +22,7 @@ import com.facebook.react.uimanager.PixelUtil
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
+import com.linecorp.apng.ApngDrawable
 import okhttp3.Headers
 import com.turboimage.decoder.APNGDecoder
 
@@ -53,7 +60,6 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
 
   override fun onAfterUpdateTransaction(view: TurboImageView) {
     super.onAfterUpdateTransaction(view)
-
     view.load(view.uri) {
       view.headers?.let { headers(it) }
       listener(TurboImageListener(view))
@@ -85,6 +91,7 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
             decoderFactory { result, _, _ ->
               APNGDecoder(result.source)
             }
+            memoryCachePolicy(CachePolicy.DISABLED)
           }
 
           else -> {}
@@ -101,11 +108,17 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
       error(view.blurhashDrawable)
       size(view.resize ?: Size.ORIGINAL)
     }
+
   }
 
   override fun onDropViewInstance(view: TurboImageView) {
     super.onDropViewInstance(view)
     view.dispose()
+    if(view.drawable is ApngDrawable){
+      val apngDrawable = view.drawable as ApngDrawable
+//      apngDrawable.recycle()
+      apngDrawable.stop()
+    }
   }
 
   @ReactProp(name = "source")

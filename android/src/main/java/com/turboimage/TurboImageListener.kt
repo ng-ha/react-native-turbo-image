@@ -28,7 +28,6 @@ class TurboImageListener(private val view: TurboImageView) : ImageRequest.Listen
 
   override fun onSuccess(request: ImageRequest, result: SuccessResult) {
     super.onSuccess(request, result)
-
     val reactContext = view.context as ReactContext
     UIManagerHelper.getEventDispatcher(reactContext, view.id)?.let {
       val payload = Arguments.createMap().apply {

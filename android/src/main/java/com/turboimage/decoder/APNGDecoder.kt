@@ -9,10 +9,11 @@ import kotlinx.coroutines.runInterruptible
 class APNGDecoder(private val source: ImageSource) : Decoder {
 
   override suspend fun decode() = runInterruptible {
-    val isAPNG = ApngDrawable.isApng(source.file().toString())
+    val filePath = source.file().toString()
+    val isAPNG = ApngDrawable.isApng(filePath)
 
     if (isAPNG) {
-      DecodeResult(drawable = ApngDrawable.decode(source.file().toString()), isSampled = false)
+      DecodeResult(drawable = ApngDrawable.decode(filePath), isSampled = false)
     } else {
       null
     }

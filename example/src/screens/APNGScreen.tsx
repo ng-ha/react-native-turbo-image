@@ -12,9 +12,10 @@ const APNGScreen = () => {
           title={item.title}
           size={300}
           source={{ uri: item.url }}
-          indicator={{ style: 'large' }}
+          // indicator={{ style: 'large' }}
           format="apng"
-          cachePolicy="dataCache"
+          cachePolicy="urlCache"
+          resize={100}
         />
       )}
       keyExtractor={(item, index) => item.url + index}
