@@ -12,7 +12,7 @@ const APNGScreen = () => {
           title={item.title}
           size={300}
           source={{ uri: item.url }}
-          // indicator={{ style: 'large' }}
+          indicator={{ style: 'large' }}
           format="apng"
           cachePolicy="urlCache"
           resize={100}
