@@ -54,9 +54,15 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
 
   override fun onAfterUpdateTransaction(view: TurboImageView) {
     super.onAfterUpdateTransaction(view)
+    val defaultCrossfade = if (view.thumbhashDrawable != null || view.blurhashDrawable != null) {
+      0
+    } else {
+      CrossfadeDrawable.DEFAULT_DURATION
+    }
 
     view.load(view.uri) {
       view.headers?.let { headers(it) }
+      view.allowHardware?.let { allowHardware(it) }
       listener(TurboImageListener(view))
       diskCachePolicy(
         if (view.cachePolicy != "memory")
@@ -95,7 +101,7 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
           ?: view.circleProgressDrawable
       )
       transformations(view.transformations)
-      crossfade(view.crossfade ?: CrossfadeDrawable.DEFAULT_DURATION)
+      crossfade(view.crossfade ?: defaultCrossfade)
       error(view.blurhashDrawable)
       size(view.resize ?: Size.ORIGINAL)
     }
@@ -175,6 +181,11 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
   @ReactProp(name = "tint")
   fun setTint(view: TurboImageView, tint: Int?) {
     view.tint = tint
+  }
+
+  @ReactProp(name = "allowHardware")
+  fun setAllowHardware(view: TurboImageView, allowHardware: Boolean?) {
+    view.allowHardware = allowHardware
   }
 
   @ReactProp(name = "format")

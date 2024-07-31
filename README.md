@@ -1,6 +1,5 @@
 <div align="center">
-  <img src="https://github.com/duguyihou/react-native-turbo-image/blob/main/example/assets/list.gif" width="200" />
-  <img src="https://github.com/duguyihou/react-native-turbo-image/blob/main/example/assets/process.gif" width="200" />
+  <img src="https://github.com/duguyihou/react-native-turbo-image/blob/main/example/assets/ios.gif" width="200" />
   
   > You can find more examples in [example folder](https://github.com/duguyihou/react-native-turbo-image/tree/main/example)
 </div>
@@ -120,7 +119,9 @@ Show the blur placeholder image in the case of a failure.
 
 ### `fadeDuration?: number`
 
-The transition duration of the image. default value: 300(iOS) / 100(Android)
+The transition duration of the image. default value: 300 milliseconds(iOS) / 100(Android) milliseconds
+
+> note: To avoid flicking, it will be set to 0 when a placeholder is provided.
 
 ### `borderRadius?: number`
 
@@ -151,6 +152,10 @@ The color is applied to every non-transparent pixel, causing the image’s shape
 ### `enableLiveTextInteraction?: boolean` (iOS 16+ only)
 
 Enables Live Text interaction with the image.
+
+### `allowHardware?: boolean` (Android only)
+
+Setting this to false this will reduce performance on API 26 and above. Only disable this if necessary. [Coil's docs](https://coil-kt.github.io/coil/recipes/#shared-element-transitions)
 
 ### `format?: String`
 
