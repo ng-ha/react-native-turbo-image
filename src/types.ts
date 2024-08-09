@@ -61,6 +61,7 @@ export interface TurboImageProps extends AccessibilityProps, ViewProps {
   rounded?: boolean;
   blur?: number;
   monochrome?: number | ColorValue;
+  brightness?: number;
   resize?: number;
   tint?: number | ColorValue;
   cachePolicy?: CachePolicy;

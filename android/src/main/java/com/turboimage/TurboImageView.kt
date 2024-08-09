@@ -31,6 +31,7 @@ class TurboImageView(private val reactContext: ThemedReactContext) :
   var rounded: Boolean? = null
   var blur: Int? = null
   var monochrome: Int? = null
+  var brightness: Float? = null
   var tint: Int? = null
   var allowHardware: Boolean? = null
 
@@ -84,7 +85,9 @@ class TurboImageView(private val reactContext: ThemedReactContext) :
       monochrome?.let {
         list.add(MonochromeTransformation(it))
       }
-
+      brightness?.let {
+        list.add(BrightnessTransformation(it))
+      }
       tint?.let {
         list.add(ColorFilterTransformation(it))
       }

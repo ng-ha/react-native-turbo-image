@@ -56,7 +56,9 @@ final class TurboImageView : UIView {
   @objc var resize: NSNumber?
   
   @objc var tint: UIColor!
-  
+    
+  @objc var brightness: NSNumber?
+    
   @objc var resizeMode = "contain" {
     didSet {
       let contentMode = ResizeMode(rawValue: resizeMode)?.contentMode
@@ -265,13 +267,73 @@ fileprivate extension TurboImageView {
                                         parameters: parameters,
                                         identifier: identifier))
     }
-    
+    if rounded {
+      initialProcessors.append(
+      ImageProcessors.Circle())
+    }
+    if let blur {
+      initialProcessors.append(
+        ImageProcessors.GaussianBlur(radius: blur.intValue))
+    }
+    if let monochrome {
+      let name = "CIColorMonochrome"
+      let parameters = [
+        "inputIntensity": 1,
+        "inputColor": CIColor(color: monochrome)
+      ] as [String : Any]
+      let identifier = "turboImage.monochrome"
+      initialProcessors.append(
+      ImageProcessors.CoreImageFilter(name: name,
+                                        parameters: parameters,
+                                        identifier: identifier))
+    }
+        
     if let tint {
       let tintProcessor = ImageProcessors
         .Anonymous(id: "turboImage.tint") { image in
           image.withTintColor(tint)
         }
       initialProcessors.append(tintProcessor)
+    }
+    if let brightness {
+        let name = "CIColorCube"
+        let size: UInt32 = 4
+        let brightnessFactor: Float = Float(truncating: brightness)// Adjust brightness factor as desired
+        let cubeDataSize = Int(size * size * size) * MemoryLayout<Float>.size * 4
+        
+        // Create a buffer for cube data
+        var cubeData = [Float](repeating: 0, count: Int(cubeDataSize))
+        // Populate cube data
+        for b in 0..<size {
+            for g in 0..<size {
+                for r in 0..<size {
+                    let index = Int(b * size * size + g * size + r) * 4
+                    // Calculate R, G, B, A values (adjust brightness as needed)
+                    
+                    let rValue = (Float(r) / Float(size)) * brightnessFactor
+                    let gValue = (Float(g) / Float(size)) * brightnessFactor
+                    let bValue = (Float(b) / Float(size)) * brightnessFactor
+                    let aValue: Float = 1
+                    
+                    cubeData[index + 0] = rValue
+                    cubeData[index + 1] = gValue
+                    cubeData[index + 2] = bValue
+                    cubeData[index + 3] = aValue
+                }
+            }
+        }
+        
+        // Create NSData from cube data
+        let data = Data(bytes: &cubeData, count: cubeDataSize)
+        let parameters = [
+            "inputCubeDimension": size,
+            "inputCubeData": data
+        ] as [String : Any]
+        
+        let identifier = "turboImage.colorcube"
+        
+        let brightlessProcessor = ImageProcessors.CoreImageFilter(name: name, parameters: parameters, identifier: identifier)
+        initialProcessors.append(brightlessProcessor)
     }
     
     return initialProcessors

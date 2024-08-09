@@ -168,6 +168,14 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
     view.monochrome = monochrome
   }
 
+  /**
+   * if set brightness: Double? it will throw Unrecognized type class.java.lang.Double
+   */
+  @ReactProp(name = "brightness")
+  fun setBrightness(view: TurboImageView, brightness: Double) {
+    view.brightness = brightness?.toFloat()
+  }
+
   @ReactProp(name = "resize")
   fun setResize(view: TurboImageView, resize: Int?) {
     resize?.let {

@@ -32,6 +32,8 @@ RCT_EXPORT_VIEW_PROPERTY(enableLiveTextInteraction, BOOL)
 
 RCT_EXPORT_VIEW_PROPERTY(format, NSString)
 
+RCT_EXPORT_VIEW_PROPERTY(brightness, NSNumber)
+
 RCT_EXPORT_VIEW_PROPERTY(onStart, RCTDirectEventBlock)
 
 RCT_EXPORT_VIEW_PROPERTY(onSuccess, RCTDirectEventBlock)
