@@ -20,6 +20,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.views.imagehelper.ResourceDrawableIdHelper
 import okhttp3.Headers
+import com.turboimage.decoder.APNGDecoder
 
 class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
 
