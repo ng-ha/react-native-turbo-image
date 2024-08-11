@@ -684,7 +684,6 @@ export const apngData = [
   {
     title: 'APNG',
     url: 'https://apng.onevcat.com/assets/elephant.png',
-    format: 'apng',
   },
   {
     title: 'APNG',
