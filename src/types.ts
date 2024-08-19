@@ -24,7 +24,7 @@ export type Indicator = Partial<{
 }>;
 export type ResizeMode = 'contain' | 'cover' | 'stretch' | 'center';
 
-export type CachePolicy = 'memory' | 'urlCache' | 'dataCache';
+export type CachePolicy = 'urlCache' | 'dataCache';
 
 export type Format = 'svg' | 'gif' | 'apng';
 
@@ -75,6 +75,7 @@ export interface TurboImageProps extends AccessibilityProps, ViewProps {
 
 export type TurboImageApi = {
   prefetch: (sources: Source[]) => Promise<void>;
+  dispose: (sources: Source[]) => Promise<void>;
   clearMemoryCache: () => Promise<void>;
   clearDiskCache: () => Promise<void>;
 };

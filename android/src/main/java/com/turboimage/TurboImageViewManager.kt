@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.widget.ImageView.ScaleType
+import coil.Coil
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
@@ -32,18 +33,15 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
         "phasedRegistrationNames" to mapOf(
           "bubbled" to "onFailure"
         )
-      ),
-      "onSuccess" to mapOf(
+      ), "onSuccess" to mapOf(
         "phasedRegistrationNames" to mapOf(
           "bubbled" to "onSuccess"
         )
-      ),
-      "onStart" to mapOf(
+      ), "onStart" to mapOf(
         "phasedRegistrationNames" to mapOf(
           "bubbled" to "onStart"
         )
-      ),
-      "onCompletion" to mapOf(
+      ), "onCompletion" to mapOf(
         "phasedRegistrationNames" to mapOf(
           "bubbled" to "onCompletion"
         )
@@ -63,16 +61,13 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
       CrossfadeDrawable.DEFAULT_DURATION
     }
 
-    view.load(view.uri) {
+    val imageLoader = Coil.imageLoader(view.context).newBuilder()
+      .respectCacheHeaders(view.cachePolicy == "urlCache").build()
+
+    view.load(view.uri, imageLoader) {
       view.headers?.let { headers(it) }
       view.allowHardware?.let { allowHardware(it) }
       listener(TurboImageListener(view))
-      diskCachePolicy(
-        if (view.cachePolicy != "memory")
-          CachePolicy.ENABLED
-        else
-          CachePolicy.DISABLED
-      )
       view.format?.let {
         when (it) {
           "svg" -> {
@@ -99,9 +94,7 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
         }
       }
       placeholder(
-        view.thumbhashDrawable
-          ?: view.blurhashDrawable
-          ?: view.circleProgressDrawable
+        view.thumbhashDrawable ?: view.blurhashDrawable ?: view.circleProgressDrawable
       )
       transformations(view.transformations)
       crossfade(view.crossfade ?: defaultCrossfade)
@@ -122,12 +115,10 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
     val uri = source.toHashMap()["uri"] as? String
     if (source.hasKey("__packager_asset") && uri?.startsWith("http") == false) {
       val resId = ResourceDrawableIdHelper.getInstance().getResourceDrawableId(view.context, uri)
-      val url = Uri.Builder()
-        .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+      val url = Uri.Builder().scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
         .authority(view.context.resources.getResourcePackageName(resId))
         .appendPath(view.context.resources.getResourceTypeName(resId))
-        .appendPath(view.context.resources.getResourceEntryName(resId))
-        .build()
+        .appendPath(view.context.resources.getResourceEntryName(resId)).build()
       view.uri = url.toString()
     } else {
       view.uri = uri
@@ -202,8 +193,7 @@ class TurboImageViewManager : SimpleViewManager<TurboImageView>() {
   fun setResize(view: TurboImageView, resize: Int?) {
     resize?.let {
       view.resize = Size(
-        PixelUtil.toPixelFromDIP(resize.toFloat()).toInt(),
-        Dimension.Undefined
+        PixelUtil.toPixelFromDIP(resize.toFloat()).toInt(), Dimension.Undefined
       )
     }
   }
